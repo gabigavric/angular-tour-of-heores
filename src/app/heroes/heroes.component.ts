@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Hero } from '../hero';
-import { HEROES } from '../mock-heroes'
+import { HeroService } from '../hero.service';
 
 @Component({
   selector: 'app-heroes',
@@ -9,11 +9,15 @@ import { HEROES } from '../mock-heroes'
 })
 export class HeroesComponent implements OnInit {
 
-  heroes = HEROES;
-
-  constructor() { }
-
+  heroes: Hero[] = [];
+  constructor(private heroService: HeroService) {} //The parameter simultaneously defines a private heroService property and identifies it as a HeroService injection site.
+                           // When Angular creates a HeroesComponent, the Dependency Injection system sets the heroService parameter to the singleton instance of HeroService.
   ngOnInit() {
+    this.getHeroes(); //Angular calls ngOnInit() at an appropriate time after constructing a HeroesComponent instance.
+  }
+
+  getHeroes(): void { 
+    this.heroes = this.heroService.getHeroes(); //only works now because service returns mock heroes.
   }
 
   selectedHero?: Hero; //selectedHero property unassigned(no selected hero when the app starts)
