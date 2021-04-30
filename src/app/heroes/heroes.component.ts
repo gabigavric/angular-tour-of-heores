@@ -16,8 +16,9 @@ export class HeroesComponent implements OnInit {
     this.getHeroes(); //Angular calls ngOnInit() at an appropriate time after constructing a HeroesComponent instance.
   }
 
-  getHeroes(): void { 
-    this.heroes = this.heroService.getHeroes(); //only works now because service returns mock heroes.
+  getHeroes(): void {                            
+    this.heroService.getHeroes()                 //waits for the Observable to emit the array of heroes
+    .subscribe(heroes => this.heroes = heroes);   //The subscribe() method passes the emitted array to the callback, which sets the component's heroes property.
   }
 
   selectedHero?: Hero; //selectedHero property unassigned(no selected hero when the app starts)
