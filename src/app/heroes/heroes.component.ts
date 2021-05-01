@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-heroes',
@@ -9,20 +11,23 @@ import { HeroService } from '../hero.service';
 })
 export class HeroesComponent implements OnInit {
 
+  selectedHero?: Hero;
+
   heroes: Hero[] = [];
-  constructor(private heroService: HeroService) {} //The parameter simultaneously defines a private heroService property and identifies it as a HeroService injection site.
-                           // When Angular creates a HeroesComponent, the Dependency Injection system sets the heroService parameter to the singleton instance of HeroService.
+
+  constructor(private heroService: HeroService, private messageService: MessageService) { }
+
   ngOnInit() {
-    this.getHeroes(); //Angular calls ngOnInit() at an appropriate time after constructing a HeroesComponent instance.
+    this.getHeroes();
   }
 
-  getHeroes(): void {                            
-    this.heroService.getHeroes()                 //waits for the Observable to emit the array of heroes
-    .subscribe(heroes => this.heroes = heroes);   //The subscribe() method passes the emitted array to the callback, which sets the component's heroes property.
-  }
-
-  selectedHero?: Hero; //selectedHero property unassigned(no selected hero when the app starts)
-  onSelect(hero: Hero): void {   //onSelect() method assigns the clicked hero from the template to the component's selectedHero.
+  onSelect(hero: Hero): void {
     this.selectedHero = hero;
+    this.messageService.add(`HeroesComponent: Selected hero id=${hero.id}`);
+  }
+
+  getHeroes(): void {
+    this.heroService.getHeroes() //Waits for the Observable to emit the array of heroes
+        .subscribe(heroes => this.heroes = heroes); //The subscribe() method passes the emitted array to the callback, which sets the component's heroes property.
   }
 }
