@@ -13,6 +13,7 @@ export class HeroService {
 
   getHeroes(): Observable<Hero[]> {  
     const heroes = of(HEROES); // of(HEROES) returns an Observable<Hero[]> that emits a single value, the array of mock heroes.
+    this.messageService.add('HeroService: fetched heroes');
     return heroes;
   }
 }
