@@ -12,17 +12,33 @@ export class HeroService {
 
   private heroesUrl = 'api/heroes'; //URL to web api. Address to heroes resource on server(in-memory-data-service.ts)
 
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
+
   //Angular will inject the singletons "MessageService" & "HttpClient" into their properties when it creates the HeroService
   constructor(
     private http: HttpClient,
     private messageService: MessageService) { }
 
-  //GET hero from the server
-  getHero(id: number): Observable<Hero> { // http.get() returns Observable<Hero> aka 'an observerable of Hero objects'
+  /*GET hero from the server
+  http.get() returns Observable<Hero> aka 'an observerable of Hero objects' */
+  getHero(id: number): Observable<Hero> {
     const url = `${this.heroesUrl}/${id}`; //constructs url w/desired hero's id.
     return this.http.get<Hero>(url).pipe( //'pipes' Observable result from http.get() through RxJS catchError() operator
       tap(_ => this.log(`fetched hero id=${id}`)), // tap looks at observable value & sends message via log() message area at bottom of screen
       catchError(this.handleError<Hero>(`getHero id=${id}`)) // catchError operator intercepts failed Observable, then passes error to error handling function
+    );
+  }
+
+  /*PUT: update the hero on the server. 
+  put() takes 3 parmas: the url, the data to update(the modified hero), and options.
+  The URL is unchanged. webAPI knows which hero to update by looking at the hero's id.
+  webAPI expects special header in HTTP save requests, header is httpOptions constant */
+  updateHero(hero: Hero): Observable<any> {
+    return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
+      tap(_ => this.log(`updated hero id=${hero.id}`)),
+      catchError(this.handleError<any>('updateHero'))
     );
   }
 
