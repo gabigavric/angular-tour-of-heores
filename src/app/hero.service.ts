@@ -21,7 +21,7 @@ export class HeroService {
     private http: HttpClient,
     private messageService: MessageService) { }
 
-  /*GET hero from the server
+  /**GET hero from the server
   http.get() returns Observable<Hero> aka 'an observerable of Hero objects' */
   getHero(id: number): Observable<Hero> {
     const url = `${this.heroesUrl}/${id}`; //constructs url w/desired hero's id.
@@ -31,7 +31,7 @@ export class HeroService {
     );
   }
 
-  /*PUT: update the hero on the server. 
+  /**PUT: update the hero on the server. 
   put() takes 3 parmas: the url, the data to update(the modified hero), and options.
   The URL is unchanged. webAPI knows which hero to update by looking at the hero's id.
   webAPI expects special header in HTTP save requests, header is httpOptions constant */
@@ -39,6 +39,14 @@ export class HeroService {
     return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
       tap(_ => this.log(`updated hero id=${hero.id}`)),
       catchError(this.handleError<any>('updateHero'))
+    );
+  }
+
+  /**POST: add a new hero to the server */
+  addHero(hero: Hero): Observable<Hero> {
+    return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions).pipe(  //post() generates id for new hero, which it returns in the Observable<Hero> to the caller.
+      tap((newHero: Hero) => this.log(`added hero w/ id=${newHero.id}`)),
+      catchError(this.handleError<Hero>('addHero'))
     );
   }
 
