@@ -28,9 +28,8 @@ import { InMemoryDataService } from './in-memory-data.service';
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
-    HttpClientInMemoryWebApiModule.forRoot(
-    InMemoryDataService, { dataEncapsulation: false }
-)
+    HttpClientInMemoryWebApiModule.forRoot( // forRoot() configuration method takes an InMemoryDataService class that primes the in-memory database.
+    InMemoryDataService, { dataEncapsulation: false } )
   ],
   providers: [],
   bootstrap: [AppComponent]
