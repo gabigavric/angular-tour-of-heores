@@ -15,19 +15,20 @@ export class HeroesComponent implements OnInit {
 
   heroes: Hero[] = [];
 
+  //below - simultaneously defines a private heroService property and identifies it as a HeroService injection site
   constructor(private heroService: HeroService, private messageService: MessageService) { }
 
   ngOnInit() {
     this.getHeroes();
   }
 
-  onSelect(hero: Hero): void {
-    this.selectedHero = hero;
-    this.messageService.add(`HeroesComponent: Selected hero id=${hero.id}`);
+  onSelect(passedInHero: Hero): void {
+    this.selectedHero = passedInHero;
+    this.messageService.add(`HeroesComponent: Selected hero id=${passedInHero.id}`);
   }
 
   getHeroes(): void {
     this.heroService.getHeroes() //Waits for the Observable to emit the array of heroes
-        .subscribe(heroes => this.heroes = heroes); //The subscribe() method passes the emitted array to the callback, which sets the component's heroes property.
+        .subscribe(emmitedHeroes => this.heroes = emmitedHeroes); //The subscribe() method passes the emitted array to the callback, which sets the component's heroes property.
   }
 }
