@@ -17,12 +17,12 @@ export class HeroService {
     private http: HttpClient,
     private messageService: MessageService) { }
 
-  //GET heroes from the server
-  getHeroes(): Observable<Hero[]> {
-    return this.http.get<Hero[]>(this.heroesUrl)  // http.get() returns Observable<Hero[]> aka 'an observerable of hero arrays'
-    .pipe( //'pipe' Observable result from http.get() through RxJS catchError() operator
-      tap(_ => this.log('fetched heroes')), // tap into observable values & send message via log() message area at bottom of screen
-      catchError(this.handleError<Hero[]>('getHeroes', [])) // catchError operator intercepts failed Observable, then passes error to error handling function
+  //GET hero from the server
+  getHero(id: number): Observable<Hero> { // http.get() returns Observable<Hero> aka 'an observerable of Hero objects'
+    const url = `${this.heroesUrl}/${id}`; //constructs url w/desired hero's id.
+    return this.http.get<Hero>(url).pipe( //'pipes' Observable result from http.get() through RxJS catchError() operator
+      tap(_ => this.log(`fetched hero id=${id}`)), // tap looks at observable value & sends message via log() message area at bottom of screen
+      catchError(this.handleError<Hero>(`getHero id=${id}`)) // catchError operator intercepts failed Observable, then passes error to error handling function
     );
   }
 
