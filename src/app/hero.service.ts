@@ -21,6 +21,15 @@ export class HeroService {
     private http: HttpClient,
     private messageService: MessageService) { }
 
+  /** GET heroes from the server */
+  getHeroes(): Observable<Hero[]> {
+    return this.http.get<Hero[]>(this.heroesUrl)
+      .pipe(
+        tap(_ => this.log('fetched heroes')),
+        catchError(this.handleError<Hero[]>('getHeroes', []))
+      );
+  }
+
   /**GET hero from the server
   http.get() returns Observable<Hero> aka 'an observerable of Hero objects' */
   getHero(id: number): Observable<Hero> {
@@ -50,6 +59,21 @@ export class HeroService {
     );
   }
 
+  /** DELETE: delete the hero from the server 
+   calls HttpClient.delete()
+   url is heroes resrouce url plus id of hero to delete
+   you dont send data as you did with PUT and POST
+   you still send httpOptions
+   */
+  deleteHero(id: number): Observable<Hero> {
+    const url = `${this.heroesUrl}/${id}`;
+
+    return this.http.delete<Hero>(url, this.httpOptions).pipe(
+      tap(_ => this.log(`deleted hero id=${id}`)),
+      catchError(this.handleError<Hero>('deleteHero'))
+    );
+  }
+
   /**
   * Handle Http operation that failed.
   * Let the app continue.
@@ -75,3 +99,10 @@ export class HeroService {
     this.messageService.add(`HeroService: ${message}`);
   }
 }
+
+
+
+
+
+
+

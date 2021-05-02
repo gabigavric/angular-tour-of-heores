@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
-import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-heroes',
@@ -26,9 +25,15 @@ export class HeroesComponent implements OnInit {
   add(name: string): void {
     name = name.trim();
     if (!name) { return; }
-    this.heroService.addHero({ name } as Hero) //handler creates Hero like object from the name, but w/missing id. It passes created Hero object to heroServices' addHero()
+    this.heroService.addHero({ name } as Hero)
       .subscribe(hero => {
-        this.heroes.push(hero);  //when addHero() saves, callback receives the new hero and pushes it into to the heroes list for display.
+        this.heroes.push(hero);
       });
   }
+
+  delete(hero: Hero): void {
+    this.heroes = this.heroes.filter(h => h !== hero);
+    this.heroService.deleteHero(hero.id).subscribe();
+  }
+
 }
